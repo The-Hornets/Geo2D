@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "geo2d/version"
+require_relative 'geo2d/version'
 
 module Geo2d
   class Error < StandardError; end
