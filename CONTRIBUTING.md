@@ -1,5 +1,20 @@
 # Contributing
 
+## Ветки
+
+Все ветки отводятся от `develop`, PR кидается в `develop`.
+
+Формат: `<тип>/<краткое-описание>` — слова через дефис, только строчные буквы.
+
+```
+feat/segment-intersection
+fix/point-distance-zero-division
+refactor/projection-method
+test/polygon-edge-cases
+docs/circle-readme
+chore/update-dependencies
+```
+
 ## Коммиты
 
 Формат: `<тип>: <что сделано>` — до 72 символов, глагол в инфинитиве.
