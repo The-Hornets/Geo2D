@@ -21,3 +21,6 @@ Metrics/BlockLength:
 
 Lint/EmptyFile:
   Enabled: false
+
+Lint/ScriptPermission:
+  Enabled: false
