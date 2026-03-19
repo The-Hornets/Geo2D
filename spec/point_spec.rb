@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../geo2d/lib/geo2d/point'
+require_relative '../lib/geo2d/point'
 
 describe Point do
   describe '#initialize' do
