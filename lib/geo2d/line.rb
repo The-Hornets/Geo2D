@@ -20,23 +20,31 @@ module Geo2d
     def self.from_equation(a, b, c)
       raise ArgumentError, 'a and b cannot both be zero' if a.zero? && b.zero?
 
-      p1, p2 = points_for_equation(a, b, c)
-      new(p1, p2)
-    end
-
-    private_class_method def self.points_for_equation(a, b, c)
-      # ?? на сколько продлевать линию
-      # Горизонтальная прямая y = -c/b
       if a.zero?
-        [Point.new(0, -c / b.to_f), Point.new(1, -c / b.to_f)]
-      # Вертикальная прямая: x = -c/a
+        horizontal_points(b, c)
       elsif b.zero?
-        [Point.new(-c / a.to_f, 0), Point.new(-c / a.to_f, 1)]
+        vertical_points(a, c)
       else
-        [Point.new(0, -c / b.to_f), Point.new(1, -(a + c) / b.to_f)]
+        general_points(a, b, c)
       end
     end
 
+    # ?? на сколько продлевать линию
+    # Горизонтальная прямая y = -c/b
+    private_class_method def self.horizontal_points(b, c)
+      y = -c / b.to_f
+      [Point.new(0, y), Point.new(1, y)]
+    end
+
+    # Вертикальная прямая: x = -c/a
+    private_class_method def self.vertical_points(a, c)
+      x = -c / a.to_f
+      [Point.new(x, 0), Point.new(x, 1)]
+    end
+
+    private_class_method def self.general_points(a, b, c)
+      [Point.new(0, -c / b.to_f), Point.new(1, -(a + c) / b.to_f)]
+    end
 
     # Возвращает угловой коэффициент
     def slope
@@ -89,6 +97,12 @@ module Geo2d
       ((s1 * s2) + 1).abs < EPSILON
     end
 
+    def ==(other)
+      return false unless other.is_a?(Line)
+
+      other.contains_point?(@point1) && other.contains_point?(@point2)
+    end
+
     # Находит точку пересечения с другой прямой
     def intersection_of_lines(other)
       raise ArgumentError, 'Argument must be a Line' unless other.is_a?(Line)
@@ -96,21 +110,19 @@ module Geo2d
       det = (coef_a * other.coef_b) - (other.coef_a * coef_b)
       return coincident_or_nil(other) if det.abs < EPSILON
 
+      intersection_point(other, det)
+    end
+
+    private
+
+    def intersection_point(other, det) # rubocop:disable Metrics/AbcSize
       x = ((coef_b * other.coef_c) - (other.coef_b * coef_c)) / det.to_f
       y = ((other.coef_a * coef_c) - (coef_a * other.coef_c)) / det.to_f
       Point.new(x, y)
     end
 
-private
-
     def coincident_or_nil(other)
       parallel?(other) && contains_point?(other.point1) ? self : nil
-    end
-
-    def ==(other)
-      return false unless other.is_a?(Line)
-
-      other.contains_point?(@point1) && other.contains_point?(@point2)
     end
   end
 end
