@@ -2,7 +2,7 @@
 
 module Geo2d
   class Line
-    attr_reader :point_1, :point_2
+    attr_reader :point1, :point2
 
     def initialize(point1, point2)
       raise ArgumentError, 'Points must be distinct' if point1 == point2
@@ -17,31 +17,26 @@ module Geo2d
     end
 
     # Фабричный метод: создание прямой по точке и угловому коэффициенту
-    def self.from_point_slope(point, slope)
-      # ?? на сколько продлевать линию
-      point2 = slope.nil? ? Point.new(point.x, point.y + 1) : Point.new(point.x + 1, point.y + slope)
-      new(point, point2)
-    end
-
-    # Фабричный метод: создание прямой по коэффициентам уравнения a*x + b*y + c = 0
     def self.from_equation(a, b, c)
       raise ArgumentError, 'a and b cannot both be zero' if a.zero? && b.zero?
 
+      p1, p2 = points_for_equation(a, b, c)
+      new(p1, p2)
+    end
+
+    private_class_method def self.points_for_equation(a, b, c)
       # ?? на сколько продлевать линию
       # Горизонтальная прямая y = -c/b
       if a.zero?
-        p1 = Point.new(0, -c / b.to_f)
-        p2 = Point.new(1, -c / b.to_f)
+        [Point.new(0, -c / b.to_f), Point.new(1, -c / b.to_f)]
       # Вертикальная прямая: x = -c/a
       elsif b.zero?
-        p1 = Point.new(-c / a.to_f, 0)
-        p2 = Point.new(-c / a.to_f, 1)
+        [Point.new(-c / a.to_f, 0), Point.new(-c / a.to_f, 1)]
       else
-        p1 = Point.new(0, -c / b.to_f)
-        p2 = Point.new(1, -(a + c) / b.to_f)
+        [Point.new(0, -c / b.to_f), Point.new(1, -(a + c) / b.to_f)]
       end
-      new(p1, p2)
     end
+
 
     # Возвращает угловой коэффициент
     def slope
@@ -86,28 +81,30 @@ module Geo2d
     def perpendicular?(other)
       return false unless other.is_a?(Line)
 
-      coef_l1 = slope
-      coef_l2 = other.slope
-      return true if (coef_l1.nil? && coef_l2.zero?) || (coef_l2.nil? && coef_l1.zero?)
-      return false if coef_l1.nil? || coef_l2.nil?
+      s1 = slope
+      s2 = other.slope
+      return (s1.nil? ^ s2.nil?) && [s1, s2].compact.first.zero? if s1.nil? || s2.nil?
 
       # Если произведение угловых коэффициентов равно -1, то прямые перпендикулярны
-      ((coef_l1 * coef_l2) + 1).abs < EPSILON
+      ((s1 * s2) + 1).abs < EPSILON
     end
 
     # Находит точку пересечения с другой прямой
     def intersection_of_lines(other)
       raise ArgumentError, 'Argument must be a Line' unless other.is_a?(Line)
 
-      det = (a * other.b) - (other.a * b)
-      if det.abs < EPSILON
-        return self if parallel?(other) && contains_point?(other.point1)
+      det = (coef_a * other.coef_b) - (other.coef_a * coef_b)
+      return coincident_or_nil(other) if det.abs < EPSILON
 
-        return nil
-      end
-      x = ((b * other.c) - (other.b * c)) / det.to_f
-      y = ((other.a * c) - (a * other.c)) / det.to_f
+      x = ((coef_b * other.coef_c) - (other.coef_b * coef_c)) / det.to_f
+      y = ((other.coef_a * coef_c) - (coef_a * other.coef_c)) / det.to_f
       Point.new(x, y)
+    end
+
+private
+
+    def coincident_or_nil(other)
+      parallel?(other) && contains_point?(other.point1) ? self : nil
     end
 
     def ==(other)
