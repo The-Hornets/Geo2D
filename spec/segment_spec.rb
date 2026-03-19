@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # spec/segment_spec.rb
 require_relative '../lib/geo2d'
 
