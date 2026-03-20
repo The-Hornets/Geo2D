@@ -3,14 +3,14 @@
 require_relative '../lib/geo2d/angle'
 
 describe Angle do
-  # 1. КОНСТРУКТОРЫ
+  # 1. CONSTRUCTORS
   describe '#initialize' do
-    it 'создаёт угол с радианами' do
+    it 'creates an angle with radians' do
       angle = Angle.new(Math::PI)
       expect(angle.radians).to eq(Math::PI)
     end
 
-    it 'нормализует угол в диапазон [0, 2π)' do
+    it 'normalizes angle to [0, 2π)' do
       angle1 = Angle.new(3 * Math::PI)
       angle2 = Angle.new(-Math::PI / 2)
       expect(angle1.radians).to be_within(1e-10).of(Math::PI)
@@ -19,123 +19,122 @@ describe Angle do
   end
 
   describe '.from_degrees' do
-    it 'создаёт угол из градусов' do
+    it 'creates an angle from degrees' do
       angle = Angle.from_degrees(180)
       expect(angle.radians).to be_within(1e-10).of(Math::PI)
     end
 
-    it 'нормализует градусы > 360' do
+    it 'normalizes degrees greater than 360' do
       angle = Angle.from_degrees(540)
       expect(angle.radians).to be_within(1e-10).of(Math::PI)
     end
 
-    it 'нормализует отрицательные градусы' do
+    it 'normalizes negative degrees' do
       angle = Angle.from_degrees(-90)
       expect(angle.radians).to be_within(1e-10).of(3 * Math::PI / 2)
     end
   end
 
-  # 2. СВОЙСТВА
+  # 2. PROPERTIES
   describe '#degrees' do
-    it 'возвращает угол в градусах' do
+    it 'returns angle in degrees' do
       angle = Angle.new(Math::PI / 2)
       expect(angle.degrees).to be_within(1e-10).of(90)
     end
 
-    it 'возвращает нормализованное значение для углов > 360°' do
+    it 'returns normalized value for angles greater than 360 degrees' do
       angle = Angle.from_degrees(450)
       expect(angle.degrees).to be_within(1e-10).of(90)
     end
   end
 
-  # 3. ПРЕДИКАТЫ
+  # 3. PREDICATES
   describe '#acute?' do
-    it 'возвращает true для острого угла (< 90°)' do
+    it 'returns true for acute angle less than 90 degrees' do
       expect(Angle.new(Math::PI / 4)).to be_acute
     end
 
-    it 'возвращает false для прямого угла' do
+    it 'returns false for right angle' do
       expect(Angle.new(Math::PI / 2)).not_to be_acute
     end
 
-    it 'возвращает false для тупого угла' do
+    it 'returns false for obtuse angle' do
       expect(Angle.new(3 * Math::PI / 4)).not_to be_acute
     end
   end
 
   describe '#right?' do
-    it 'возвращает true для прямого угла (90°)' do
+    it 'returns true for right angle of 90 degrees' do
       expect(Angle.new(Math::PI / 2)).to be_right
     end
 
-    it 'возвращает false для острого угла' do
+    it 'returns false for acute angle' do
       expect(Angle.new(Math::PI / 4)).not_to be_right
     end
 
-    it 'возвращает false для тупого угла' do
+    it 'returns false for obtuse angle' do
       expect(Angle.new(3 * Math::PI / 4)).not_to be_right
     end
   end
 
   describe '#obtuse?' do
-    it 'возвращает true для тупого угла (90° < angle < 180°)' do
+    it 'returns true for obtuse angle between 90 and 180 degrees' do
       expect(Angle.new(3 * Math::PI / 4)).to be_obtuse
     end
 
-    it 'возвращает false для острого угла' do
+    it 'returns false for acute angle' do
       expect(Angle.new(Math::PI / 4)).not_to be_obtuse
     end
 
-    it 'возвращает false для прямого угла' do
+    it 'returns false for right angle' do
       expect(Angle.new(Math::PI / 2)).not_to be_obtuse
     end
   end
 
   describe '#straight?' do
-    it 'возвращает true для развёрнутого угла (180°)' do
+    it 'returns true for straight angle of 180 degrees' do
       expect(Angle.new(Math::PI)).to be_straight
     end
 
-    it 'возвращает false для других углов' do
+    it 'returns false for other angles' do
       expect(Angle.new(Math::PI / 2)).not_to be_straight
     end
   end
 
   describe '#reflex?' do
-    it 'возвращает true для рефлекторного угла (> 180°)' do
+    it 'returns true for reflex angle greater than 180 degrees' do
       expect(Angle.new(5 * Math::PI / 4)).to be_reflex
     end
 
-    it 'возвращает false для угла <= 180°' do
+    it 'returns false for angle less than or equal to 180 degrees' do
       expect(Angle.new(Math::PI)).not_to be_reflex
     end
   end
 
-  # 4. ГРАНИЧНЫЕ СЛУЧАИ
-  describe 'сравнение углов' do
-    it 'считает равными углы с разницей меньше EPSILON' do
+  # 4. EDGE CASES
+  describe 'angle comparison' do
+    it 'considers angles equal within epsilon tolerance' do
       angle1 = Angle.new(Math::PI / 2)
-      angle2 = Angle.new(Math::PI / 2 + 1e-11)
+      angle2 = Angle.new((Math::PI / 2) + 1e-11)
       expect(angle1).to eq(angle2)
     end
 
-    it 'считает разные углы неравными' do
+    it 'considers different angles unequal' do
       angle1 = Angle.new(Math::PI / 4)
       angle2 = Angle.new(Math::PI / 2)
       expect(angle1).not_to eq(angle2)
     end
   end
 
-  describe 'нормализация больших углов' do
-    it 'корректно нормализует угол 720°' do
+  describe 'normalization of large angles' do
+    it 'normalizes 720 degrees to 0 degrees' do
       angle = Angle.from_degrees(720)
       expect(angle.degrees).to be_within(1e-10).of(0)
     end
 
-    it 'корректно нормализует угол -360°' do
+    it 'normalizes -360 degrees to 0 degrees' do
       angle = Angle.from_degrees(-360)
       expect(angle.degrees).to be_within(1e-10).of(0)
     end
   end
 end
-  
