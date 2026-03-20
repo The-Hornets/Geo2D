@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../lib/geo2d/angle'
+require_relative '../lib/geo2d/angle'
 
 describe Angle do
   # 1. КОНСТРУКТОРЫ
