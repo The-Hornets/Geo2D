@@ -32,3 +32,20 @@ describe Angle do
       expect(angle.radians).to be_within(1e-10).of(3 * Math::PI / 2)
     end
   end
+    # 2. СВОЙСТВА
+  describe '#degrees' do
+    it 'возвращает угол в градусах' do
+      angle = Angle.new(Math::PI / 2)
+      expect(angle.degrees).to be_within(1e-10).of(90)
+    end
+
+    it 'возвращает нормализованное значение для углов > 360°' do
+      angle = Angle.from_degrees(450)
+      expect(angle.degrees).to be_within(1e-10).of(90)
+    end
+  end
+
+    
+    
+
+  
