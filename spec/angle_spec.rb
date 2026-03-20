@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../lib/geo2d/angle'
 
 describe Angle do
@@ -32,7 +34,8 @@ describe Angle do
       expect(angle.radians).to be_within(1e-10).of(3 * Math::PI / 2)
     end
   end
-    # 2. СВОЙСТВА
+
+  # 2. СВОЙСТВА
   describe '#degrees' do
     it 'возвращает угол в градусах' do
       angle = Angle.new(Math::PI / 2)
@@ -44,7 +47,8 @@ describe Angle do
       expect(angle.degrees).to be_within(1e-10).of(90)
     end
   end
-   # 3. ПРЕДИКАТЫ
+
+  # 3. ПРЕДИКАТЫ
   describe '#acute?' do
     it 'возвращает true для острого угла (< 90°)' do
       expect(Angle.new(Math::PI / 4)).to be_acute
@@ -106,7 +110,8 @@ describe Angle do
       expect(Angle.new(Math::PI)).not_to be_reflex
     end
   end
-   # 4. ГРАНИЧНЫЕ СЛУЧАИ
+
+  # 4. ГРАНИЧНЫЕ СЛУЧАИ
   describe 'сравнение углов' do
     it 'считает равными углы с разницей меньше EPSILON' do
       angle1 = Angle.new(Math::PI / 2)
@@ -133,7 +138,4 @@ describe Angle do
     end
   end
 end
-    
-    
-
   
