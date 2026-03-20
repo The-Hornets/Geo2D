@@ -62,4 +62,10 @@ describe Geo2d::Vector do
       expect(v1.cross(v2)).to eq(2)
     end
   end
+  describe '#to_s' do
+    it 'вектор инициализирован' do
+      expect(v1.to_s).to eq('(3, 4)')
+      expect(v2.to_s).to eq('(1, 2)')
+    end
+  end
 end
