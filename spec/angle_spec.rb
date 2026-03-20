@@ -106,6 +106,33 @@ describe Angle do
       expect(Angle.new(Math::PI)).not_to be_reflex
     end
   end
+   # 4. ГРАНИЧНЫЕ СЛУЧАИ
+  describe 'сравнение углов' do
+    it 'считает равными углы с разницей меньше EPSILON' do
+      angle1 = Angle.new(Math::PI / 2)
+      angle2 = Angle.new(Math::PI / 2 + 1e-11)
+      expect(angle1).to eq(angle2)
+    end
+
+    it 'считает разные углы неравными' do
+      angle1 = Angle.new(Math::PI / 4)
+      angle2 = Angle.new(Math::PI / 2)
+      expect(angle1).not_to eq(angle2)
+    end
+  end
+
+  describe 'нормализация больших углов' do
+    it 'корректно нормализует угол 720°' do
+      angle = Angle.from_degrees(720)
+      expect(angle.degrees).to be_within(1e-10).of(0)
+    end
+
+    it 'корректно нормализует угол -360°' do
+      angle = Angle.from_degrees(-360)
+      expect(angle.degrees).to be_within(1e-10).of(0)
+    end
+  end
+end
     
     
 
