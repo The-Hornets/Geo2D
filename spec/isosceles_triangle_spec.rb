@@ -64,7 +64,7 @@ RSpec.describe Geo2d::IsoscelesTriangle do
       triangle = Geo2d::IsoscelesTriangle.new(p1, p2, p3)
       angles = triangle.base_angles
       expect(angles.size).to eq(2)
-      expect(angles[0]).to be_within(1e-10).of(angles[1])
+      expect(angles[0]).to eq(angles[1])
     end
   end
 
