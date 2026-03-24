@@ -13,7 +13,7 @@ module Geo2d
     # @param c [Point] third vertex
     # @raise [ArgumentError] if points are collinear, duplicate, or do not form an equilateral triangle
     def initialize(a, b, c)
-      super(a, b, c)
+      super
       validate_equilateral
     end
 

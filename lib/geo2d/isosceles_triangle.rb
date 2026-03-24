@@ -13,7 +13,7 @@ module Geo2d
     # @param c [Point] third vertex
     # @raise [ArgumentError] if points are collinear, duplicate, or do not form an isosceles triangle
     def initialize(a, b, c)
-      super(a, b, c)
+      super
       validate_isosceles
     end
 
@@ -57,17 +57,14 @@ module Geo2d
     # @return [Array<Angle>] array of two equal base angles
     def base_angles
       sides = side_lengths
-      if (sides[0] - sides[1]).abs < EPSILON
-        # equal sides are a and b, base is c
-        angle_at = angle_at_vertex(vertices[2])
-        [angle_at, angle_at]
-      elsif (sides[1] - sides[2]).abs < EPSILON
-        angle_at = angle_at_vertex(vertices[0])
-        [angle_at, angle_at]
-      else
-        angle_at = angle_at_vertex(vertices[1])
-        [angle_at, angle_at]
-      end
+      angle_at = if (sides[0] - sides[1]).abs < EPSILON
+                   angle_at_vertex(vertices[2])
+                 elsif (sides[1] - sides[2]).abs < EPSILON
+                   angle_at_vertex(vertices[0])
+                 else
+                   angle_at_vertex(vertices[1])
+                 end
+      [angle_at, angle_at]
     end
 
     # Returns the vertex angle (angle between equal sides)
