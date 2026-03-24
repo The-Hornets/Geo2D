@@ -8,6 +8,7 @@ require_relative 'geo2d/triangle'
 require_relative 'geo2d/right_triangle'
 require_relative 'geo2d/quadrilateral'
 require_relative 'geo2d/parallelogram'
+require_relative 'geo2d/rectangle'
 
 module Geo2d
   EPSILON = 1e-10
