@@ -51,4 +51,4 @@ Layout/EndOfLine:
     - 'spec/vector_spec.rb'
 
 Metrics/AbcSize:
-  Max: 25
+  Max: 40

@@ -61,7 +61,6 @@ class Ray
     Geo2d::Point.new(x, y)
   end
 
-  # rubocop:disable Metrics/AbcSize
   # Checks if a point lies on the ray
   #
   # @param point [Geo2d::Point] the point to check
@@ -89,7 +88,6 @@ class Ray
 
     dot_product > -1e-10
   end
-  # rubocop:enable Metrics/AbcSize
 
   # Checks if two rays are parallel
   #
