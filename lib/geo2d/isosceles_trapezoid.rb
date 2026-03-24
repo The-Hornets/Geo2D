@@ -75,7 +75,11 @@ module Geo2d
       @base2 = (vertices[2].x - vertices[3].x).abs
       @height = (vertices[3].y - vertices[0].y).abs
       @offset = (vertices[3].x - vertices[0].x).abs
-      @leg = Math.sqrt((height**2) + (((base1 - base2) / 2.0)**2))
+      @leg = calculate_leg
+    end
+
+    def calculate_leg
+      Math.sqrt((height**2) + (((base1 - base2) / 2.0)**2))
     end
   end
 end
