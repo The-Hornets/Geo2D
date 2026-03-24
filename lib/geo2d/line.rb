@@ -115,7 +115,7 @@ module Geo2d
 
     private
 
-    def intersection_point(other, det) # rubocop:disable Metrics/AbcSize
+    def intersection_point(other, det)
       x = ((coef_b * other.coef_c) - (other.coef_b * coef_c)) / det.to_f
       y = ((other.coef_a * coef_c) - (coef_a * other.coef_c)) / det.to_f
       Point.new(x, y)

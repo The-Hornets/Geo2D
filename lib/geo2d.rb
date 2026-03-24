@@ -3,6 +3,7 @@
 require_relative 'geo2d/version'
 require_relative 'geo2d/point'
 require_relative 'geo2d/segment'
+require_relative 'geo2d/polygon'
 
 module Geo2d
   EPSILON = 1e-10

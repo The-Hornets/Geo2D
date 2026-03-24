@@ -24,3 +24,19 @@ Lint/EmptyFile:
 
 Lint/ScriptPermission:
   Enabled: false
+
+Layout/EndOfLine:
+  EnforcedStyle: lf
+  Exclude:
+    - 'Gemfile'
+    - 'Rakefile'
+    - 'geo2d.gemspec'
+    - 'bin/console'
+    - 'lib/geo2d/point.rb'
+    - 'lib/geo2d/segment.rb'
+    - 'lib/geo2d/version.rb'
+    - 'spec/point_spec.rb'
+    - 'spec/segment_spec.rb'
+
+Metrics/AbcSize:
+  Max: 25
