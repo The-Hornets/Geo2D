@@ -6,13 +6,8 @@ module Geo2d
     attr_reader :center, :radius
 
     def initialize(center, radius)
-      unless center.is_a?(Point)
-        raise ArgumentError, 'Центр должен быть точкой (Geo2d::Point)'
-      end
-
-      unless radius.is_a?(Numeric) && radius.positive?
-        raise ArgumentError, 'Радиус должен быть положительным числом'
-      end
+      raise ArgumentError, 'Центр должен быть точкой (Geo2d::Point)' unless center.is_a?(Point)
+      raise ArgumentError, 'Радиус должен быть положительным числом' unless radius.is_a?(Numeric) && radius.positive?
 
       @center = center
       @radius = radius.to_f
@@ -22,10 +17,7 @@ module Geo2d
       unless point1.is_a?(Point) && point2.is_a?(Point)
         raise ArgumentError, 'Обе точки диаметра должны быть точками (Geo2d::Point)'
       end
-
-      if point1 == point2
-        raise ArgumentError, 'Точки диаметра не должны совпадать'
-      end
+      raise ArgumentError, 'Точки диаметра не должны совпадать' if point1 == point2
 
       center_x = (point1.x + point2.x) / 2.0
       center_y = (point1.y + point2.y) / 2.0
@@ -39,32 +31,10 @@ module Geo2d
       unless p1.is_a?(Point) && p2.is_a?(Point) && p3.is_a?(Point)
         raise ArgumentError, 'Все три точки должны быть точками (Geo2d::Point)'
       end
+      raise ArgumentError, 'Точки не должны совпадать' if p1 == p2 || p2 == p3 || p1 == p3
 
-      if p1 == p2 || p2 == p3 || p1 == p3
-        raise ArgumentError, 'Точки не должны совпадать'
-      end
-
-      # Проверка на коллинеарность через площадь треугольника
-      area = (p2.x - p1.x) * (p3.y - p1.y) - (p3.x - p1.x) * (p2.y - p1.y)
-      if area.abs < EPSILON
-        raise ArgumentError, 'Точки не должны быть коллинеарны'
-      end
-
-      # Находим центр описанной окружности через формулу с определителями
-      d = 2.0 * (p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y))
-
-      ux = ((p1.x**2 + p1.y**2) * (p2.y - p3.y) +
-            (p2.x**2 + p2.y**2) * (p3.y - p1.y) +
-            (p3.x**2 + p3.y**2) * (p1.y - p2.y)) / d
-
-      uy = ((p1.x**2 + p1.y**2) * (p3.x - p2.x) +
-            (p2.x**2 + p2.y**2) * (p1.x - p3.x) +
-            (p3.x**2 + p3.y**2) * (p2.x - p1.x)) / d
-
-      center = Point.new(ux, uy)
-      radius = center.distance_to(p1)
-
-      new(center, radius)
+      validate_non_collinear!(p1, p2, p3)
+      calculate_circumcircle(p1, p2, p3)
     end
 
     def diameter
@@ -72,7 +42,7 @@ module Geo2d
     end
 
     def area
-      Math::PI * @radius**2
+      Math::PI * (@radius**2)
     end
 
     def circumference
@@ -82,37 +52,28 @@ module Geo2d
     alias perimeter circumference
 
     def contains_point?(point)
-      unless point.is_a?(Point)
-        raise ArgumentError, 'Аргумент должен быть точкой (Geo2d::Point)'
-      end
+      raise ArgumentError, 'Аргумент должен быть точкой (Geo2d::Point)' unless point.is_a?(Point)
 
       (center.distance_to(point) - @radius).abs < EPSILON
     end
 
     def intersects_circle?(other)
-      unless other.is_a?(Circle)
-        raise ArgumentError, 'Аргумент должен быть окружностью (Geo2d::Circle)'
-      end
+      raise ArgumentError, 'Аргумент должен быть окружностью (Geo2d::Circle)' unless other.is_a?(Circle)
 
       distance = center.distance_to(other.center)
       sum_radii = @radius + other.radius
       diff_radii = (@radius - other.radius).abs
 
-      # Окружности пересекаются, если расстояние между центрами
-      # меньше суммы радиусов и больше разности радиусов
       distance < sum_radii && distance > diff_radii
     end
 
     def tangent_to_circle?(other)
-      unless other.is_a?(Circle)
-        raise ArgumentError, 'Аргумент должен быть окружностью (Geo2d::Circle)'
-      end
+      raise ArgumentError, 'Аргумент должен быть окружностью (Geo2d::Circle)' unless other.is_a?(Circle)
 
       distance = center.distance_to(other.center)
       sum_radii = @radius + other.radius
       diff_radii = (@radius - other.radius).abs
 
-      # Касание: расстояние равно сумме радиусов (внешнее) или разности (внутреннее)
       (distance - sum_radii).abs < EPSILON || (distance - diff_radii).abs < EPSILON
     end
 
@@ -132,6 +93,45 @@ module Geo2d
 
     def to_s
       "Circle(center: #{center}, radius: #{@radius})"
+    end
+
+    class << self
+      private
+
+      def validate_non_collinear!(p1, p2, p3)
+        area = (((p2.x - p1.x) * (p3.y - p1.y)) -
+                ((p3.x - p1.x) * (p2.y - p1.y)))
+        raise ArgumentError, 'Точки не должны быть коллинеарны' if area.abs < EPSILON
+      end
+
+      def calculate_circumcircle(p1, p2, p3)
+        d = calculate_determinant(p1, p2, p3)
+        ux = calculate_ux(p1, p2, p3, d)
+        uy = calculate_uy(p1, p2, p3, d)
+
+        center = Point.new(ux, uy)
+        radius = center.distance_to(p1)
+
+        new(center, radius)
+      end
+
+      def calculate_determinant(p1, p2, p3)
+        (2.0 * (p1.x * (p2.y - p3.y))) + (2.0 * (p2.x * (p3.y - p1.y))) + (2.0 * (p3.x * (p1.y - p2.y)))
+      end
+
+      def calculate_ux(p1, p2, p3, d)
+        num = (((p1.x**2) + (p1.y**2)) * (p2.y - p3.y)) +
+              (((p2.x**2) + (p2.y**2)) * (p3.y - p1.y)) +
+              (((p3.x**2) + (p3.y**2)) * (p1.y - p2.y))
+        num / d
+      end
+
+      def calculate_uy(p1, p2, p3, d)
+        num = (((p1.x**2) + (p1.y**2)) * (p3.x - p2.x)) +
+              (((p2.x**2) + (p2.y**2)) * (p1.x - p3.x)) +
+              (((p3.x**2) + (p3.y**2)) * (p2.x - p1.x))
+        num / d
+      end
     end
   end
 end

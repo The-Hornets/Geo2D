@@ -179,7 +179,7 @@ RSpec.describe Geo2d::Circle do
     it 'учитывает погрешность при сравнении' do
       slightly_different = Geo2d::Circle.new(
         Geo2d::Point.new(Geo2d::Circle::EPSILON / 2, Geo2d::Circle::EPSILON / 2),
-        radius + Geo2d::Circle::EPSILON / 2
+        radius + (Geo2d::Circle::EPSILON / 2)
       )
       expect(circle).to eq(slightly_different)
     end
@@ -210,13 +210,13 @@ RSpec.describe Geo2d::Circle do
 
   describe 'floating point precision' do
     it 'корректно обрабатывает точки на границе EPSILON' do
-      point_near_circle = Geo2d::Point.new(5 + Geo2d::Circle::EPSILON / 2, 0)
+      point_near_circle = Geo2d::Point.new(5 + (Geo2d::Circle::EPSILON / 2), 0)
       expect(circle.contains_point?(point_near_circle)).to be true
     end
 
     it 'сравнивает окружности с учётом погрешности' do
       circle1 = Geo2d::Circle.new(center, 5.0)
-      circle2 = Geo2d::Circle.new(center, 5.0 + Geo2d::Circle::EPSILON / 2)
+      circle2 = Geo2d::Circle.new(center, 5.0 + (Geo2d::Circle::EPSILON / 2))
       expect(circle1).to eq(circle2)
     end
   end
