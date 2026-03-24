@@ -40,6 +40,9 @@ Layout/EndOfLine:
     - 'lib/geo2d/polygon.rb'
     - 'lib/geo2d/ray.rb'
     - 'lib/geo2d/triangle.rb'
+    - 'lib/geo2d/right_triangle.rb'
+    - 'lib/geo2d/quadrilateral.rb'
+    - 'lib/geo2d/parallelogram.rb'
     - 'lib/geo2d/vector.rb'
     - 'spec/point_spec.rb'
     - 'spec/segment_spec.rb'
@@ -48,7 +51,10 @@ Layout/EndOfLine:
     - 'spec/ray_spec.rb'
     - 'spec/spec_helper.rb'
     - 'spec/triangle_spec.rb'
+    - 'spec/right_triangle_spec.rb'
     - 'spec/vector_spec.rb'
+    - 'spec/quadrilateral_spec.rb'
+    - 'spec/parallelogram_spec.rb'
 
 Metrics/AbcSize:
   Max: 40
