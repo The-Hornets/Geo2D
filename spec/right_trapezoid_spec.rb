@@ -18,7 +18,9 @@ module Geo2d
       end
 
       it 'raises error for offset (non-zero offset)' do
-        expect { RightTrapezoid.from_bases_and_height(10, 6, 4, 2) }.to raise_error(ArgumentError)
+        expect do
+          RightTrapezoid.from_bases_and_height(10, 6, 4, 2)
+        end.to raise_error(ArgumentError, /Offset must be 0/)
       end
 
       it 'raises error for negative base1' do
@@ -79,10 +81,10 @@ module Geo2d
       end
     end
 
-    describe '#has_right_angle?' do
+    describe '#right_angle?' do
       it 'returns true' do
         t = RightTrapezoid.from_bases_and_height(10, 6, 4)
-        expect(t.has_right_angle?).to be(true)
+        expect(t.right_angle?).to be(true)
       end
     end
 

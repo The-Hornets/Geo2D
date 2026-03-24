@@ -10,7 +10,7 @@ module Geo2d
     attr_reader :base1, :base2, :height, :offset, :vertices, :right_angle_leg
 
     def initialize(p1, p2, p3, p4)
-      super(p1, p2, p3, p4)
+      super
       @vertices = [p1, p2, p3, p4]
       calculate_properties
       validate_right_trapezoid
@@ -19,12 +19,7 @@ module Geo2d
     def self.from_bases_and_height(base1, base2, height, offset = 0)
       raise ArgumentError, 'Bases must be positive' unless base1.positive? && base2.positive?
       raise ArgumentError, 'Height must be positive' unless height.positive?
-
-      # Для прямоугольной трапеции левая сторона должна быть вертикальной
-      # offset должен быть 0, иначе это будет непрямоугольная трапеция
-      if offset != 0
-        raise ArgumentError, 'Offset must be 0 for right trapezoid'
-      end
+      raise ArgumentError, 'Offset must be 0 for right trapezoid' if offset != 0
 
       new(
         Point.new(0, 0),
@@ -67,7 +62,7 @@ module Geo2d
       true
     end
 
-    def has_right_angle?
+    def right_angle?
       true
     end
 
@@ -88,7 +83,6 @@ module Geo2d
     end
 
     def validate_right_trapezoid
-      # Проверяем, что левая сторона вертикальна
       left_vertical = (vertices[3].x - vertices[0].x).abs < EPSILON
 
       return if left_vertical
