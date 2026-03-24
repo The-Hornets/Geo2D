@@ -37,6 +37,15 @@ module Geo2d
       (x * other.y) - (y * other.x)
     end
 
+    def angle_to(other)
+      dot_product = dot(other)
+      magnitudes = magnitude * other.magnitude
+      return 0.0 if magnitudes < EPSILON
+
+      cos_angle = (dot_product / magnitudes).clamp(-1.0, 1.0)
+      Math.acos(cos_angle)
+    end
+
     def to_s
       "(#{x}, #{y})"
     end
