@@ -34,29 +34,30 @@ module Geo2d
       raise ArgumentError, 'Vertices array cannot be empty' if vertices.nil? || vertices.empty?
       raise ArgumentError, 'Polygon must have at least 3 vertices' if vertices.size < 3
 
-      # Проверка на совпадающие точки
+      validate_no_duplicate_vertices(vertices)
+      validate_not_collinear(vertices)
+    end
+
+    def validate_no_duplicate_vertices(vertices)
       vertices.size.times do |i|
         ((i + 1)...vertices.size).each do |j|
           raise ArgumentError, "Duplicate vertices are not allowed: #{vertices[i]}" if vertices[i] == vertices[j]
         end
       end
+    end
 
-      # Проверка на коллинеарность всех точек
+    def validate_not_collinear(vertices)
       raise ArgumentError, 'Vertices cannot be collinear' if collinear?(vertices)
     end
 
     def collinear?(points)
       return false if points.size < 3
 
-      # Берём первые три различные точки для проверки
       p1 = points[0]
       p2 = points[1]
       p3 = points[2]
-
-      # Векторное произведение векторов (p1->p2) и (p1->p3)
-      # Если равно 0, то точки коллинеарны
-      cross_product = ((p2.x - p1.x) * (p3.y - p1.y)) - ((p2.y - p1.y) * (p3.x - p1.x))
-      cross_product.abs < Geo2d::EPSILON
+      cross = ((p2.x - p1.x) * (p3.y - p1.y)) - ((p2.y - p1.y) * (p3.x - p1.x))
+      cross.abs < Geo2d::EPSILON
     end
   end
 end

@@ -2,9 +2,9 @@
 
 require_relative '../lib/geo2d/polygon'
 
-include Geo2d
-
 describe Geo2d::Polygon do
+  include Geo2d
+
   let(:subclass) { Class.new(Geo2d::Polygon) }
   let(:p1) { Geo2d::Point.new(0, 0) }
   let(:p2) { Geo2d::Point.new(3, 0) }
