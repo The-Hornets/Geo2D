@@ -5,6 +5,7 @@ require_relative 'geo2d/point'
 require_relative 'geo2d/segment'
 require_relative 'geo2d/polygon'
 require_relative 'geo2d/triangle'
+require_relative 'geo2d/right_triangle'
 
 module Geo2d
   EPSILON = 1e-10
