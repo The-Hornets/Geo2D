@@ -17,9 +17,8 @@ module Geo2d
         expect(t.height).to eq(4)
       end
 
-      it 'creates with offset' do
-        t = RightTrapezoid.from_bases_and_height(10, 6, 4, 2)
-        expect(t.offset).to eq(2)
+      it 'raises error for offset (non-zero offset)' do
+        expect { RightTrapezoid.from_bases_and_height(10, 6, 4, 2) }.to raise_error(ArgumentError)
       end
 
       it 'raises error for negative base1' do
@@ -45,8 +44,8 @@ module Geo2d
 
     describe '#perimeter' do
       it 'returns sum of sides' do
-        t = RightTrapezoid.from_bases_and_height(10, 6, 4, 2)
-        leg = Math.sqrt((4**2) + (2**2))
+        t = RightTrapezoid.from_bases_and_height(10, 6, 4)
+        leg = Math.sqrt((4**2) + ((10 - 6)**2))
         expect(t.perimeter).to be_within(0.001).of(10 + 6 + leg + 4)
       end
     end
