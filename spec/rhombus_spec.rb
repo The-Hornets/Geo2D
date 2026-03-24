@@ -123,8 +123,8 @@ RSpec.describe Geo2d::Rhombus do
       d1, d2 = rhombus.diagonals
       a = 5
       angle = Math::PI / 3
-      expected_d1 = a * Math.sqrt(2 + 2 * Math.cos(angle))
-      expected_d2 = a * Math.sqrt(2 - 2 * Math.cos(angle))
+      expected_d1 = a * Math.sqrt(2 + (2 * Math.cos(angle)))
+      expected_d2 = a * Math.sqrt(2 - (2 * Math.cos(angle)))
       expect(d1).to be_within(0.01).of(expected_d1)
       expect(d2).to be_within(0.01).of(expected_d2)
     end

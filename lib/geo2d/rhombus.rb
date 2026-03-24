@@ -35,7 +35,7 @@ module Geo2d
       # Создаём вершины ромба
       p1 = Point.new(0, 0)
       p2 = Point.new(side, 0)
-      p3 = Point.new(side + side * Math.cos(angle), side * Math.sin(angle))
+      p3 = Point.new(side + (side * Math.cos(angle)), side * Math.sin(angle))
       p4 = Point.new(side * Math.cos(angle), side * Math.sin(angle))
 
       new(p1, p2, p3, p4, angle)
@@ -79,8 +79,8 @@ module Geo2d
     #
     # @return [Array<Float>] [diagonal1, diagonal2]
     def diagonals
-      d1 = @side * Math.sqrt(2 + 2 * Math.cos(@angle))
-      d2 = @side * Math.sqrt(2 - 2 * Math.cos(@angle))
+      d1 = @side * Math.sqrt(2 + (2 * Math.cos(@angle)))
+      d2 = @side * Math.sqrt(2 - (2 * Math.cos(@angle)))
       [d1, d2]
     end
 
@@ -95,7 +95,7 @@ module Geo2d
     #
     # @return [Boolean]
     def square?
-      (@angle - Math::PI / 2).abs < EPSILON
+      (@angle - (Math::PI / 2)).abs < EPSILON
     end
 
     # Returns true if shape is a rhombus
