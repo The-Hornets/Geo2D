@@ -8,14 +8,14 @@ module Geo2d
     attr_reader :base1, :base2, :height, :offset, :vertices
 
     def initialize(p1, p2, p3, p4)
-      super(p1, p2, p3, p4)
+      super
       @vertices = [p1, p2, p3, p4]
       calculate_properties
     end
 
     def self.from_bases_and_height(base1, base2, height, offset = 0)
-      raise ArgumentError, 'Bases must be positive' unless base1 > 0 && base2 > 0
-      raise ArgumentError, 'Height must be positive' unless height > 0
+      raise ArgumentError, 'Bases must be positive' unless base1.positive? && base2.positive?
+      raise ArgumentError, 'Height must be positive' unless height.positive?
 
       new(
         Point.new(0, 0),
@@ -48,11 +48,12 @@ module Geo2d
 
     def isosceles?
       return false if parallelogram?
-      offset == 0
+
+      offset.zero?
     end
 
     def parallelogram?
-      base1 == base2 && offset == 0
+      base1 == base2 && offset.zero?
     end
 
     def rectangle?
@@ -76,7 +77,7 @@ module Geo2d
     end
 
     def valid?
-      area > 0
+      area.positive?
     end
 
     def ==(other)
