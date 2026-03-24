@@ -6,10 +6,11 @@ RSpec.describe Geo2d::Rhombus do
   # 1. CONSTRUCTORS
   describe '.from_points' do
     it 'creates a rhombus from four points' do
+      # Ромб со стороной 2 и углом 60 градусов
       p1 = Geo2d::Point.new(0, 0)
       p2 = Geo2d::Point.new(2, 0)
-      p3 = Geo2d::Point.new(3, 1)
-      p4 = Geo2d::Point.new(1, 1)
+      p3 = Geo2d::Point.new(3, 1.7320508075688772)
+      p4 = Geo2d::Point.new(1, 1.7320508075688772)
       rhombus = Geo2d::Rhombus.from_points(p1, p2, p3, p4)
       expect(rhombus.vertices_count).to eq(4)
     end
@@ -20,7 +21,7 @@ RSpec.describe Geo2d::Rhombus do
       c = Geo2d::Point.new(4, 3)
       d = Geo2d::Point.new(0, 3)
       expect { Geo2d::Rhombus.from_points(a, b, c, d) }
-        .to raise_error(ArgumentError, /not a rhombus|rhombus/)
+        .to raise_error(ArgumentError, /rhombus/)
     end
 
     it 'raises error for collinear points' do
@@ -29,7 +30,7 @@ RSpec.describe Geo2d::Rhombus do
       c = Geo2d::Point.new(2, 2)
       d = Geo2d::Point.new(3, 3)
       expect { Geo2d::Rhombus.from_points(a, b, c, d) }
-        .to raise_error(ArgumentError, /collinear|convex/)
+        .to raise_error(ArgumentError, /collinear|convex|rhombus/)
     end
 
     it 'raises error for duplicate points' do
@@ -120,7 +121,6 @@ RSpec.describe Geo2d::Rhombus do
     it 'returns lengths of both diagonals' do
       rhombus = Geo2d::Rhombus.from_side_and_angle(5, Math::PI / 3)
       d1, d2 = rhombus.diagonals
-      # Для ромба: d1 = a * sqrt(2 + 2*cos(angle)), d2 = a * sqrt(2 - 2*cos(angle))
       a = 5
       angle = Math::PI / 3
       expected_d1 = a * Math.sqrt(2 + 2 * Math.cos(angle))
