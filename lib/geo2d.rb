@@ -12,6 +12,8 @@ require_relative 'geo2d/rectangle'
 require_relative 'geo2d/circle'
 require_relative 'geo2d/disk'
 require_relative 'geo2d/regular_polygon'
+require_relative 'geo2d/rectangular'
+require_relative 'geo2d/square'
 
 module Geo2d
   EPSILON = 1e-10
